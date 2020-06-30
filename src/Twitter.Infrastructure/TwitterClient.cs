@@ -149,7 +149,7 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
 
         public IEnumerable<Tweet> GetTweets(string token, string screenName)
         {
-                var timelineFormat = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&include_rts=1&exclude_replies=1&count=10&trim_user=1&cursor={1}";
+                var timelineFormat = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&include_rts=1&exclude_replies=1&count=3200&trim_user=1";
                 var timelineUrl = string.Format(timelineFormat, screenName);
                 HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create(timelineUrl);
                 var timelineHeaderFormat = "{0} {1}";
