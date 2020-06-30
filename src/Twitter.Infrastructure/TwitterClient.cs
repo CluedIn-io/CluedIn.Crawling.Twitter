@@ -92,26 +92,30 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
 
         public IEnumerable<User> GetFollowers(string token, string screenName)
         {
-            //TODO: change things from timeline to followers
-            var followersFormat = "https://api.twitter.com/1.1/followers/list.json?screen_name={0}&count=10";
-            var followersUrl = string.Format(followersFormat, screenName);
-            HttpWebRequest followersRequest = (HttpWebRequest)WebRequest.Create(followersUrl);
-            var followersHeaderFormat = "{0} {1}";
-            followersRequest.Headers.Add("Authorization", string.Format(followersHeaderFormat, "bearer", token));
-            followersRequest.Method = "Get";
-            WebResponse followersResponse = followersRequest.GetResponse();
-            var followersJson = string.Empty;
-            using (followersResponse)
+            long cursor = -1;
+            while (cursor != 0)
             {
-                using (var reader = new StreamReader(followersResponse.GetResponseStream()))
+                var followersFormat = "https://api.twitter.com/1.1/followers/list.json?screen_name={0}&count=10";
+                var followersUrl = string.Format(followersFormat, screenName);
+                HttpWebRequest followersRequest = (HttpWebRequest)WebRequest.Create(followersUrl);
+                var followersHeaderFormat = "{0} {1}";
+                followersRequest.Headers.Add("Authorization", string.Format(followersHeaderFormat, "bearer", token));
+                followersRequest.Method = "Get";
+                WebResponse followersResponse = followersRequest.GetResponse();
+                var followersJson = string.Empty;
+                using (followersResponse)
                 {
-                    followersJson = reader.ReadToEnd();
+                    using (var reader = new StreamReader(followersResponse.GetResponseStream()))
+                    {
+                        followersJson = reader.ReadToEnd();
+                    }
                 }
-            }
-            var followers = JsonConvert.DeserializeObject<Followers>(followersJson);
-            foreach (var item in followers.users)
-            {
-                yield return item;
+                var followers = JsonConvert.DeserializeObject<Followers>(followersJson);
+                cursor = long.Parse(followers.next_cursor);
+                foreach (var item in followers.users)
+                {
+                    yield return item;
+                }
             }
         }
         //TODO check permissions, can't access mentions with the current keys
@@ -145,26 +149,26 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
 
         public IEnumerable<Tweet> GetTweets(string token, string screenName)
         {
-            var timelineFormat = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&include_rts=1&exclude_replies=1&count=10&trim_user=1";
-            var timelineUrl = string.Format(timelineFormat, screenName);
-            HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create(timelineUrl);
-            var timelineHeaderFormat = "{0} {1}";
-            timeLineRequest.Headers.Add("Authorization", string.Format(timelineHeaderFormat, "bearer", token));
-            timeLineRequest.Method = "Get";
-            WebResponse timeLineResponse = timeLineRequest.GetResponse();
-            var timeLineJson = string.Empty;
-            using (timeLineResponse)
-            {
-                using (var reader = new StreamReader(timeLineResponse.GetResponseStream()))
+                var timelineFormat = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&include_rts=1&exclude_replies=1&count=10&trim_user=1&cursor={1}";
+                var timelineUrl = string.Format(timelineFormat, screenName);
+                HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create(timelineUrl);
+                var timelineHeaderFormat = "{0} {1}";
+                timeLineRequest.Headers.Add("Authorization", string.Format(timelineHeaderFormat, "bearer", token));
+                timeLineRequest.Method = "Get";
+                WebResponse timeLineResponse = timeLineRequest.GetResponse();
+                var timeLineJson = string.Empty;
+                using (timeLineResponse)
                 {
-                    timeLineJson = reader.ReadToEnd();
+                    using (var reader = new StreamReader(timeLineResponse.GetResponseStream()))
+                    {
+                        timeLineJson = reader.ReadToEnd();
+                    }
                 }
-            }
-            var Tweets = JsonConvert.DeserializeObject<List<Tweet>>(timeLineJson);
-            foreach (var item in Tweets)
-            {
-                yield return item;
-            }
+                var Tweets = JsonConvert.DeserializeObject<List<Tweet>>(timeLineJson);
+                foreach (var item in Tweets)
+                {
+                    yield return item;
+                }
             //return null;
         }
     }
