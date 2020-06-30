@@ -95,8 +95,8 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
             long cursor = -1;
             while (cursor != 0)
             {
-                var followersFormat = "https://api.twitter.com/1.1/followers/list.json?screen_name={0}&count=200";
-                var followersUrl = string.Format(followersFormat, screenName);
+                var followersFormat = "https://api.twitter.com/1.1/followers/list.json?screen_name={0}&count=20&cursor={1}";
+                var followersUrl = string.Format(followersFormat, screenName, cursor);
                 HttpWebRequest followersRequest = (HttpWebRequest)WebRequest.Create(followersUrl);
                 var followersHeaderFormat = "{0} {1}";
                 followersRequest.Headers.Add("Authorization", string.Format(followersHeaderFormat, "bearer", token));
