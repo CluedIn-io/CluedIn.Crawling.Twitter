@@ -24,15 +24,15 @@ namespace CluedIn.Crawling.Twitter
             var client = clientFactory.CreateNew(twittercrawlJobData);
 
             //retrieve data from provider and yield objects
-            if (!string.IsNullOrWhiteSpace(twittercrawlJobData.ApiKey))
+            if (!string.IsNullOrWhiteSpace(twittercrawlJobData.ApiKey) && !string.IsNullOrWhiteSpace(twittercrawlJobData.Screen_name))
             {
-                yield return client.GetUser(twittercrawlJobData.ApiKey);
-                foreach (var item in client.GetTweets(twittercrawlJobData.ApiKey))
+                yield return client.GetUser(twittercrawlJobData.ApiKey, twittercrawlJobData.Screen_name);
+                foreach (var item in client.GetTweets(twittercrawlJobData.ApiKey, twittercrawlJobData.Screen_name))
                 {
                     item.createdByScreenName = twittercrawlJobData.Screen_name;
                     yield return item;
                 }
-                foreach (var item in client.GetFollowers(twittercrawlJobData.ApiKey))
+                foreach (var item in client.GetFollowers(twittercrawlJobData.ApiKey, twittercrawlJobData.Screen_name))
                 {
                     item.following_user = twittercrawlJobData.Screen_name;
                     yield return item;

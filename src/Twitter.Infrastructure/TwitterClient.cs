@@ -70,10 +70,10 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
             return new AccountInformation("", "");
         }
 
-        public User GetUser(string token)
+        public User GetUser(string token, string screenName)
         {
             var userFormat = "https://api.twitter.com/1.1/users/show.json?screen_name={0}&include_entities=false";
-            var userUrl = string.Format(userFormat, "cluedinhq");
+            var userUrl = string.Format(userFormat, screenName);
             HttpWebRequest userRequest = (HttpWebRequest)WebRequest.Create(userUrl);
             var userHeaderFormat = "{0} {1}";
             userRequest.Headers.Add("Authorization", string.Format(userHeaderFormat, "bearer", token));
@@ -90,11 +90,11 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
             return JsonConvert.DeserializeObject<User>(userJson);
         }
 
-        public IEnumerable<User> GetFollowers(string token)
+        public IEnumerable<User> GetFollowers(string token, string screenName)
         {
             //TODO: change things from timeline to followers
             var followersFormat = "https://api.twitter.com/1.1/followers/list.json?screen_name={0}&count=10";
-            var followersUrl = string.Format(followersFormat, "cluedinhq");
+            var followersUrl = string.Format(followersFormat, screenName);
             HttpWebRequest followersRequest = (HttpWebRequest)WebRequest.Create(followersUrl);
             var followersHeaderFormat = "{0} {1}";
             followersRequest.Headers.Add("Authorization", string.Format(followersHeaderFormat, "bearer", token));
@@ -143,10 +143,10 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
         //    }
         //}
 
-        public IEnumerable<Tweet> GetTweets(string token)
+        public IEnumerable<Tweet> GetTweets(string token, string screenName)
         {
             var timelineFormat = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&include_rts=1&exclude_replies=1&count=10&trim_user=1";
-            var timelineUrl = string.Format(timelineFormat, "cluedinhq");
+            var timelineUrl = string.Format(timelineFormat, screenName);
             HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create(timelineUrl);
             var timelineHeaderFormat = "{0} {1}";
             timeLineRequest.Headers.Add("Authorization", string.Format(timelineHeaderFormat, "bearer", token));
