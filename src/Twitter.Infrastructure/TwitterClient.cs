@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using CluedIn.Core.Logging;
 using CluedIn.Core.Providers;
@@ -90,18 +91,27 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
             return JsonConvert.DeserializeObject<User>(userJson);
         }
 
-        public IEnumerable<User> GetFollowers(string token, string screenName)
+        public IEnumerable<User> GetFollowers(string token, string screenName, bool largeFollowerCount)
         {
             long cursor = -1;
             while (cursor != 0)
             {
-                var followersFormat = "https://api.twitter.com/1.1/followers/list.json?screen_name={0}&count=20&cursor={1}";
+                var followersFormat = "https://api.twitter.com/1.1/followers/list.json?screen_name={0}&count=200&cursor={1}";
                 var followersUrl = string.Format(followersFormat, screenName, cursor);
                 HttpWebRequest followersRequest = (HttpWebRequest)WebRequest.Create(followersUrl);
                 var followersHeaderFormat = "{0} {1}";
                 followersRequest.Headers.Add("Authorization", string.Format(followersHeaderFormat, "bearer", token));
                 followersRequest.Method = "Get";
-                WebResponse followersResponse = followersRequest.GetResponse();
+                HttpWebResponse followersResponse = null;
+                try
+                {
+                    followersResponse = (HttpWebResponse)followersRequest.GetResponse();
+                }
+                catch (Exception e)
+                {
+                    log.Error(() => e.Message);
+                    break;
+                }
                 var followersJson = string.Empty;
                 using (followersResponse)
                 {
@@ -116,6 +126,8 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
                 {
                     yield return item;
                 }
+                if (largeFollowerCount)
+                    Thread.Sleep(TimeSpan.FromSeconds(65));
             }
         }
         //TODO check permissions, can't access mentions with the current keys
@@ -149,7 +161,7 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
 
         public IEnumerable<Tweet> GetTweets(string token, string screenName)
         {
-                var timelineFormat = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&include_rts=1&exclude_replies=1&count=3200&trim_user=1";
+                var timelineFormat = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&include_rts=1&exclude_replies=1&count=200&trim_user=1";
                 var timelineUrl = string.Format(timelineFormat, screenName);
                 HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create(timelineUrl);
                 var timelineHeaderFormat = "{0} {1}";
