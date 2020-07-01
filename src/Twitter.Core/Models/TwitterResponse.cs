@@ -73,6 +73,16 @@ namespace CluedIn.Crawling.Twitter.Core.Models
         public Place place { get; set; }
         public string createdByScreenName { get; set; }
     }
+    public class ProfileLocation
+    {
+        public string id { get; set; }
+        public string url { get; set; }
+        public string place_type { get; set; }
+        public string name { get; set; }
+        public string full_name { get; set; }
+        public string country_code { get; set; }
+        public string country { get; set; }
+    }
     public class User
     {
         public string following_user { get; set; }
@@ -81,7 +91,7 @@ namespace CluedIn.Crawling.Twitter.Core.Models
         public string name { get; set; }
         public string screen_name { get; set; }
         public string location { get; set; }
-        public string profile_location { get; set; }
+        public ProfileLocation profile_location { get; set; }
         public string description { get; set; }
         public string url { get; set; }
         public Entities entities { get; set; }
