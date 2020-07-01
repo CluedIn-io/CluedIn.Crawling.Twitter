@@ -54,6 +54,11 @@ namespace CluedIn.Crawling.Twitter.Core.Models
     {
         public float[] coordinates { get; set; }
     }
+
+    public class Place
+    {
+
+    }
     public class Tweet
     {
         public string created_at { get; set; }
@@ -65,7 +70,7 @@ namespace CluedIn.Crawling.Twitter.Core.Models
         public User user { get; set; }
         public ExtendedTweet extended_tweet { get; set; }
         public Entities entities { get; set; }
-        public string place { get; set; }
+        public Place place { get; set; }
         public string createdByScreenName { get; set; }
     }
     public class User
