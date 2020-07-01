@@ -63,6 +63,11 @@ namespace CluedIn.Crawling.Twitter.ClueProducers
             data.Properties[vocab.truncated] = input.truncated.PrintIfAvailable();
             data.Properties[vocab.user] = input.user.id.PrintIfAvailable();
             data.Properties[vocab.extended_tweet] = input.extended_tweet.PrintIfAvailable();
+            if (input.entities != null)
+            {
+                if (input.entities.urls.Count > 0)
+                    data.Properties[vocab.url] = input.entities.urls.Last().url;
+            }
             //data.Properties[vocab.entities] = input.entities.PrintIfAvailable();
             data.Properties[vocab.place] = input.place.PrintIfAvailable();
 
