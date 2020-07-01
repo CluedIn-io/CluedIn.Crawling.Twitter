@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -121,11 +122,11 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
                     }
                 }
                 var followers = JsonConvert.DeserializeObject<Followers>(followersJson);
-                cursor = long.Parse(followers.next_cursor);
                 foreach (var item in followers.users)
                 {
                     yield return item;
                 }
+                cursor = long.Parse(followers.next_cursor);
                 if (largeFollowerCount)
                     Thread.Sleep(TimeSpan.FromSeconds(65));
             }
@@ -161,13 +162,25 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
 
         public IEnumerable<Tweet> GetTweets(string token, string screenName)
         {
-                var timelineFormat = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&include_rts=1&exclude_replies=1&count=200&trim_user=1";
-                var timelineUrl = string.Format(timelineFormat, screenName);
+            var maxId = long.MaxValue-1;
+            while (true)
+            {
+                var timelineFormat = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&include_rts=1&exclude_replies=1&count=200&trim_user=1&max_id={1}";
+                var timelineUrl = string.Format(timelineFormat, screenName, maxId);
                 HttpWebRequest timeLineRequest = (HttpWebRequest)WebRequest.Create(timelineUrl);
                 var timelineHeaderFormat = "{0} {1}";
                 timeLineRequest.Headers.Add("Authorization", string.Format(timelineHeaderFormat, "bearer", token));
                 timeLineRequest.Method = "Get";
-                WebResponse timeLineResponse = timeLineRequest.GetResponse();
+                HttpWebResponse timeLineResponse = null;
+                try
+                {
+                    timeLineResponse = (HttpWebResponse)timeLineRequest.GetResponse();
+                }
+                catch (Exception e)
+                {
+                    log.Error(() => e.Message);
+                    break;
+                }
                 var timeLineJson = string.Empty;
                 using (timeLineResponse)
                 {
@@ -181,7 +194,19 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
                 {
                     yield return item;
                 }
-            //return null;
+                if (Tweets.Count == 0)
+                {
+                    break;
+                }
+                if (maxId == long.Parse(Tweets.Last().id) - 1)
+                {
+                    break;
+                }
+                else
+                {
+                    maxId = long.Parse(Tweets.Last().id) - 1;
+                }
+            }
         }
     }
 }
