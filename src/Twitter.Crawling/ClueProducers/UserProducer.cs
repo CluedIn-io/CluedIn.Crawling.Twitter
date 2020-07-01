@@ -42,7 +42,7 @@ namespace CluedIn.Crawling.Twitter.ClueProducers
 
             if (!string.IsNullOrWhiteSpace(input.screen_name))
             {
-                data.Name = input.screen_name.ToString();
+                data.Name = input.name.ToString();
             }
 
             if (!string.IsNullOrWhiteSpace(input.description))
