@@ -24,6 +24,7 @@ namespace CluedIn.Crawling.Twitter.Vocabularies
                 extended_tweet = group.Add(new VocabularyKey("extended_tweet", VocabularyKeyDataType.Text, VocabularyKeyVisibility.Visible));
                 entities = group.Add(new VocabularyKey("entities", VocabularyKeyDataType.Text, VocabularyKeyVisibility.Visible));
                 place = group.Add(new VocabularyKey("place", VocabularyKeyDataType.Text, VocabularyKeyVisibility.Visible));
+                url = group.Add(new VocabularyKey("URL", VocabularyKeyDataType.Uri, VocabularyKeyVisibility.Visible));
 
             });
         }
@@ -38,5 +39,6 @@ namespace CluedIn.Crawling.Twitter.Vocabularies
         public VocabularyKey extended_tweet { get; internal set; }
         public VocabularyKey entities { get; internal set; }
         public VocabularyKey place { get; internal set; }
+        public VocabularyKey url { get; internal set; }
     }
 }
