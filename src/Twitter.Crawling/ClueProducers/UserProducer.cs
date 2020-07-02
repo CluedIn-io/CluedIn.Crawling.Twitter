@@ -37,7 +37,7 @@ namespace CluedIn.Crawling.Twitter.ClueProducers
 
             if (!string.IsNullOrWhiteSpace(input.screen_name))
             {
-                data.Codes.Add(new EntityCode(EntityType.Infrastructure.User, CodeOrigin.CluedIn.CreateSpecific("Twitter"), input.screen_name.ToLowerInvariant()));
+                data.Codes.Add(new EntityCode(EntityType.Infrastructure.User, "Twitter", input.screen_name.ToLowerInvariant()));
             }
 
             if (!string.IsNullOrWhiteSpace(input.screen_name))
