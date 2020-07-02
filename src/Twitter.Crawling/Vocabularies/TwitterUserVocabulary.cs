@@ -59,6 +59,9 @@ namespace CluedIn.Crawling.Twitter.Vocabularies
                 notifications = group.Add(new VocabularyKey("notifications", VocabularyKeyDataType.Text, VocabularyKeyVisibility.Visible));
                 translator_type = group.Add(new VocabularyKey("translator_type", VocabularyKeyDataType.Text, VocabularyKeyVisibility.Visible));
             });
+
+            AddMapping(location, CluedIn.Core.Data.Vocabularies.Vocabularies.CluedInUser.HomeAddress);
+            AddMapping(time_zone, CluedIn.Core.Data.Vocabularies.Vocabularies.CluedInUser.TimeZone);
         }
 
         public VocabularyKey id { get; set; }
