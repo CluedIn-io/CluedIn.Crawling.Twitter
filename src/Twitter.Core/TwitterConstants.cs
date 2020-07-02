@@ -15,7 +15,7 @@ namespace CluedIn.Crawling.Twitter.Core
 
         // TODO Complete the following section
         // Please see https://cluedin-io.github.io/CluedIn.Documentation/docs/1-Integration/build-integration.html
-        public const string CrawlerDescription = "Twitter is a ... to be completed ...";
+        public const string CrawlerDescription = "Twitter Crawler";
         public const string Instructions = "Provide authentication instructions here, if applicable";
         public const IntegrationType Type = IntegrationType.Cloud;
         public const string Uri = "http://www.sampleurl.com"; //Uri of remote tool if applicable
