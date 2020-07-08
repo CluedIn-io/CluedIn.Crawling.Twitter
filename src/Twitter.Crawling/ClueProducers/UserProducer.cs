@@ -100,7 +100,7 @@ namespace CluedIn.Crawling.Twitter.ClueProducers
             data.Properties[vocab.name] = input.name.PrintIfAvailable();
             data.Properties[vocab.screen_name] = input.screen_name.PrintIfAvailable();
             data.Properties[vocab.location] = input.location.PrintIfAvailable();
-            data.Properties[vocab.profile_location] = input.profile_location.PrintIfAvailable();
+            //data.Properties[vocab.profile_location] = input.profile_location.PrintIfAvailable();
             data.Properties[vocab.description] = input.description.PrintIfAvailable();
             data.Properties[vocab.url] = input.url.PrintIfAvailable();
             //data.Properties[vocab.entities] = input.entities.PrintIfAvailable();
