@@ -94,8 +94,10 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
 
         public IEnumerable<User> GetFollowers(string token, string screenName, bool largeFollowerCount)
         {
+            //TODO: Remove from while loop, added for now to get a small subset of data
+            int i = 0;
             long cursor = -1;
-            while (cursor != 0)
+            while (cursor != 0 && i < 15)
             {
                 var followersFormat = "https://api.twitter.com/1.1/followers/list.json?screen_name={0}&count=200&cursor={1}";
                 var followersUrl = string.Format(followersFormat, screenName, cursor);
@@ -129,6 +131,7 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
                 cursor = long.Parse(followers.next_cursor);
                 if (largeFollowerCount)
                     Thread.Sleep(TimeSpan.FromSeconds(65));
+                i++;
             }
         }
         //TODO check permissions, can't access mentions with the current keys
@@ -162,8 +165,10 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
 
         public IEnumerable<Tweet> GetTweets(string token, string screenName)
         {
-            var maxId = long.MaxValue-1;
-            while (true)
+            //TODO: Remove from while loop, added for now to get a small subset of data
+            int i = 0;
+            var maxId = long.MaxValue - 1;
+            while (true && i < 15)
             {
                 var timelineFormat = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name={0}&include_rts=1&exclude_replies=1&count=200&trim_user=1&max_id={1}";
                 var timelineUrl = string.Format(timelineFormat, screenName, maxId);
@@ -206,6 +211,7 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
                 {
                     maxId = long.Parse(Tweets.Last().id) - 1;
                 }
+                i++;
             }
         }
     }

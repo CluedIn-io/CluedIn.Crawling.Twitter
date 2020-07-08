@@ -27,11 +27,13 @@ namespace CluedIn.Crawling.Twitter
             if (!string.IsNullOrWhiteSpace(twittercrawlJobData.ApiKey) && !string.IsNullOrWhiteSpace(twittercrawlJobData.Screen_name))
             {
                 var user = client.GetUser(twittercrawlJobData.ApiKey, twittercrawlJobData.Screen_name);
-                bool largeFollowerCount = true;
-                if (int.Parse(user.followers_count) < 3000)
-                {
-                    largeFollowerCount = false;
-                }
+                //TODO: set to true by default, now set to false to crawl subset of data faster;
+                bool largeFollowerCount = false;
+                //TODO: uncomment, left out for now, because we're working on a small subset of data;
+                //if (int.Parse(user.followers_count) < 3000)
+                //{
+                //    largeFollowerCount = false;
+                //}
                 yield return user;
                 foreach (var item in client.GetTweets(twittercrawlJobData.ApiKey, twittercrawlJobData.Screen_name))
                 {
