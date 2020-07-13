@@ -5,7 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using CluedIn.Core.Logging;
+using Microsoft.Extensions.Logging;
 using CluedIn.Core.Providers;
 using CluedIn.Crawling.Twitter.Core;
 using CluedIn.Crawling.Twitter.Core.Models;
@@ -23,11 +23,11 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
     {
         private const string BaseUri = "http://sample.com";
 
-        private readonly ILogger log;
+        private readonly ILogger<TwitterClient> log;
 
         private readonly IRestClient client;
 
-        public TwitterClient(ILogger log, TwitterCrawlJobData twitterCrawlJobData, IRestClient client) // TODO: pass on any extra dependencies
+        public TwitterClient(ILogger<TwitterClient> log, TwitterCrawlJobData twitterCrawlJobData, IRestClient client) // TODO: pass on any extra dependencies
         {
             if (twitterCrawlJobData == null)
             {
@@ -56,7 +56,7 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
             if (response.StatusCode != HttpStatusCode.OK)
             {
                 var diagnosticMessage = $"Request to {client.BaseUrl}{url} failed, response {response.ErrorMessage} ({response.StatusCode})";
-                log.Error(() => diagnosticMessage);
+                log.LogError(diagnosticMessage);
                 throw new InvalidOperationException($"Communication to jsonplaceholder unavailable. {diagnosticMessage}");
             }
 
@@ -112,7 +112,7 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
                 }
                 catch (Exception e)
                 {
-                    log.Error(() => e.Message);
+                    log.LogError(e.Message);
                     break;
                 }
                 var followersJson = string.Empty;
@@ -183,7 +183,7 @@ namespace CluedIn.Crawling.Twitter.Infrastructure
                 }
                 catch (Exception e)
                 {
-                    log.Error(() => e.Message);
+                    log.LogError(e.Message);
                     break;
                 }
                 var timeLineJson = string.Empty;

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Castle.MicroKernel.Registration;
 
 using CluedIn.Core;
@@ -8,6 +9,11 @@ using CluedIn.Crawling.Twitter.Infrastructure.Installers;
 // 
 using CluedIn.Server;
 using ComponentHost;
+
+
+using CluedIn.Core.Webhooks;
+
+
 
 namespace CluedIn.Provider.Twitter
 {
@@ -25,9 +31,11 @@ namespace CluedIn.Provider.Twitter
         public override void Start()
         {
             Container.Install(new InstallComponents());
+            var asm = Assembly.GetExecutingAssembly();
 
-            Container.Register(Types.FromThisAssembly().BasedOn<IProvider>().WithServiceFromInterface().If(t => !t.IsAbstract).LifestyleSingleton());
-            Container.Register(Types.FromThisAssembly().BasedOn<IEntityActionBuilder>().WithServiceFromInterface().If(t => !t.IsAbstract).LifestyleSingleton());
+
+            Container.Register(Types.FromAssembly(asm).BasedOn<IProvider>().WithServiceFromInterface().If(t => !t.IsAbstract).LifestyleSingleton());
+            Container.Register(Types.FromAssembly(asm).BasedOn<IEntityActionBuilder>().WithServiceFromInterface().If(t => !t.IsAbstract).LifestyleSingleton());
 
 
 

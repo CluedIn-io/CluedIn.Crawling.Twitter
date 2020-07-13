@@ -69,7 +69,7 @@ namespace CluedIn.Crawling.Twitter.ClueProducers
                     data.Properties[vocab.url] = input.entities.urls.Last().url;
             }
             //data.Properties[vocab.entities] = input.entities.PrintIfAvailable();
-            data.Properties[vocab.place] = input.place.PrintIfAvailable();
+            //data.Properties[vocab.place] = input.place.PrintIfAvailable();
 
             return clue;
         }

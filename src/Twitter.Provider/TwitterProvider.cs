@@ -29,8 +29,8 @@ namespace CluedIn.Provider.Twitter
     {
         private readonly ITwitterClientFactory _twitterClientFactory;
 
-        private static string consumerKey = ConfigurationManager.AppSettings.GetValue<string>("Providers.TwitterConsumerKey", null);
-        private static string consumerSecret = ConfigurationManager.AppSettings.GetValue<string>("Providers.TwitterConsumerSecret", null);
+        private static string consumerKey = ConfigurationManager.AppSettings.GetValue<string>("Providers.TwitterConsumerKey", "Ln1L3RIHWjssm7VysJ1dH2e0n");
+        private static string consumerSecret = ConfigurationManager.AppSettings.GetValue<string>("Providers.TwitterConsumerSecret", "zS4z2xze8VbdwNk9wrfkPc0B7a4QhF0PoCaYeR27AUAUG2hTEh");
 
         public TwitterProvider([NotNull] ApplicationContext appContext, ITwitterClientFactory twitterClientFactory)
             : base(appContext, TwitterConstants.CreateProviderMetadata())
